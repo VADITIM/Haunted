@@ -36,9 +36,7 @@ public class FPSController : MonoBehaviour
 
     private void Camera()
     {
-        var mouseDelta = Vector2.zero;
-        mouseDelta.x += Input.GetAxis("Mouse X");
-        mouseDelta.y += -Input.GetAxis("Mouse Y");
+        var mouseDelta = Vector2(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"));
 
         transform.Rotate(Vector3.up * mouseDelta.x * mouseSensitivity.x);
 
@@ -111,7 +109,7 @@ public class FPSController : MonoBehaviour
         if (moveVector == Vector3.zero)
         {
             var gravityVelocity = rb.velocity.y;
-            rb.velocity = rb.velocity * 0.9f;
+            rb.velocity *= 0.9f;
             rb.velocity = new Vector3(rb.velocity.x, gravityVelocity, rb.velocity.z);
         }
         else
