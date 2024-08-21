@@ -8,14 +8,12 @@ using UnityEngine.EventSystems;
 public class FPSController : MonoBehaviour
 {
     Vector3 lastMousePosition;
-    [SerializeField] Vector2 mouseSensitivity;
+    [SerializeField] Vector2 mouseSensitivity  = new Vector2 (5f, 5f);
     [SerializeField] GameObject cameraObject;
-    [SerializeField] float movmentSpeed;
+    [SerializeField] float movmentSpeed = 0.1f;
     [SerializeField] float jumpForce = 10f;
 
     Rigidbody rb;
-
-
 
     private void Start()
     {
@@ -98,23 +96,13 @@ public class FPSController : MonoBehaviour
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-
         switch (movement)
         {
-            case Movement.Forward:
-                moveVector = cameraForward;
-               break;
-            case Movement.Backward:
-                moveVector = -cameraForward;
-                break;
-            case Movement.Left:
-                moveVector = -cameraRight;
-                break;
-            case Movement.Right:
-                moveVector = cameraRight;
-                break;
-            case Movement.None:
-                break;
+            case Movement.Forward:   moveVector = cameraForward;    break;
+            case Movement.Backward:  moveVector = -cameraForward;   break;
+            case Movement.Left:      moveVector = -cameraRight;     break;
+            case Movement.Right:     moveVector = cameraRight;      break;
+            case Movement.None:                                     break;
         }    
 
         moveVector = moveVector.normalized;
@@ -132,6 +120,7 @@ public class FPSController : MonoBehaviour
         }
     }
 
+    // Seperate Gravity 
     private void Gravity()
     {
 
@@ -139,7 +128,6 @@ public class FPSController : MonoBehaviour
 
     private void HandleJump()
     {
-
         if (onGround && Input.GetKeyDown(KeyCode.Space))
         {
             onGround = false;
@@ -148,6 +136,7 @@ public class FPSController : MonoBehaviour
         }
     }
 
+    // Check if player is on ground
     private bool onGround;
     private void CheckForSlope()
     {
@@ -158,7 +147,7 @@ public class FPSController : MonoBehaviour
 
         /*Debug.Log(onGround);*/
 
-        // Raycast to check if the player is on the ground
+        // (Draw) Raycast to check if the player is on the ground
         Debug.DrawRay(rayOrigin, rayDirection * rayDistance, Color.red);
         
         if (Physics.Raycast(rayOrigin, rayDirection, out hit, rayDistance) && rb.velocity.y <= 0)
