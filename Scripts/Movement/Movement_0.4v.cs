@@ -2,23 +2,48 @@ using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class FPSController : MonoBehaviour
 {
-    Vector3 lastMousePosition;
     [SerializeField] Vector2 mouseSensitivity = new Vector2(5f, 5f);
     [SerializeField] GameObject cameraObject;
     [SerializeField] float movmentSpeed = 0.1f;
     [SerializeField] float jumpForce = 10f;
 
     Rigidbody rb;
+    private bool onGround;
+
+    
+    // INVENTORY
+    public Inventory inventory;
+    public HUD hud;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        InventoryItem item = collision.collider.GetComponent<InventoryItem>();
+        if (item != null)
+        {
+            Debug.Log($"{item.Name} added");
+            inventory.AddItem(item);
+        }
+    }
+
+    
+
+
+
+
+
+
+
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -125,12 +150,11 @@ public class FPSController : MonoBehaviour
     {
         if (onGround && Input.GetKeyDown(KeyCode.Space))
         {
-            onGround = false;
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
 
-    private bool onGround;
+    // PROBLEME OHNE NETZTEIL ANSCHLUSS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private void CheckForSlope()
     {
         RaycastHit hit;
