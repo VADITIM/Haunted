@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
@@ -10,8 +11,10 @@ public class PlayerMotor : MonoBehaviour
     private bool lerpCrouch = false;
 
     private bool sprinting = false;
+    public int sprintSpeed = 20;
 
     public float speed = 5f;
+
     public float gravity = -9.8f;
     public float jumpHeight = 3f;
     
@@ -22,6 +25,7 @@ public class PlayerMotor : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();  
+        crouching = false;
     }
 
     // Update is called once per frame
@@ -45,7 +49,7 @@ public class PlayerMotor : MonoBehaviour
             }
         }
     }
-    // receive the inputs for our InputManager.cs and apply them to our character controller.
+    
     public void ProcessMove(Vector2 input)
     {
         Vector3 moveDirection = Vector3.zero;
@@ -77,9 +81,9 @@ public class PlayerMotor : MonoBehaviour
     {
         sprinting = !sprinting;
         if (sprinting)
-            speed = 8; 
+            speed = sprintSpeed; 
         else
-            speed = 5;
+            speed = 5f ;
     }
 
     // INVENTORY
