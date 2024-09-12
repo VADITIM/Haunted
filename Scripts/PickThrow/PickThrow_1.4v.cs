@@ -24,7 +24,6 @@ public class PickThrow : MonoBehaviour
 
     void Start()
     {
-        // make sure holdLayer exists -- important for StopClipping
         LayerNumber = LayerMask.NameToLayer("holdLayer");
     }
 
@@ -33,15 +32,14 @@ public class PickThrow : MonoBehaviour
     {
         if (disableActions) return;
 
-        // Ensure hud is assigned before proceeding
         if (hud == null)
         {
             Debug.LogError("HUD reference is missing in PickThrow script!");
-            return;  // Stop further execution if HUD is null
+            return;  
         }
 
         HandleActions();
-        DebugRay();
+        // DebugRay();
     }
 
     void DebugRay() 
