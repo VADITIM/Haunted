@@ -1,4 +1,4 @@
-This game was developed as part of a first-year exam project, conducted between 19.08.24 and 08.10.24.
+This game was developed as part of a first-year exam project, conducted between 19.08.24 and 09.10.24.
 Designed and published by STUD10S.
 
 Developed using Unity with C#, the project brought together a team of three developers, three 3D designers, and four cross-media designers.
