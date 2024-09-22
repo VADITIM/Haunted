@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemFeather : MonoBehaviour, InventoryItem 
@@ -19,7 +16,7 @@ public class ItemFeather : MonoBehaviour, InventoryItem
         get { return _Image; }
     }
 
-    public PlayerChange playerChangeScript; 
+    public FeatherAbility FeatherAbilityScript; 
 
     public void OnPickUp()
     {
@@ -31,9 +28,9 @@ public class ItemFeather : MonoBehaviour, InventoryItem
     {
         Debug.Log($"{Name} used");
 
-        if (playerChangeScript != null)
+        if (FeatherAbilityScript != null)
         {
-            playerChangeScript.Change();
+            FeatherAbilityScript.CreateDestroyArea();
         }
     }
 }
