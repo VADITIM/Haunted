@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerChange : MonoBehaviour
@@ -20,8 +18,9 @@ public class PlayerChange : MonoBehaviour
     void Update()
     {
         SynchronizeModels();
+    }
+    public void Change() {
 
-        if (Input.GetKeyDown(KeyCode.X))
         {
             isChanged = !isChanged;
 

@@ -1,14 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour, InventoryItem 
+public class ItemGem : MonoBehaviour, InventoryItem 
 {
     public string Name 
     {
         get {
-            return "Item";
+            return "Gem";
         }
     }
 
@@ -16,8 +13,10 @@ public class Item : MonoBehaviour, InventoryItem
 
     public Sprite Image
     {
-        get {return _Image;}
+        get { return _Image; }
     }
+
+    public RevealAbility reveal; // Reference to the RevealAbility script
 
     public void OnPickUp()
     {
@@ -25,10 +24,15 @@ public class Item : MonoBehaviour, InventoryItem
         Debug.Log($"Picked up {name}");
     }
 
-    
     public void Use()
     {
         // Code to use the item
         Debug.Log($"{Name} used");
+
+        // Trigger the RevealAbility functionality if the script is assigned
+        if (reveal != null)
+        {
+            reveal.ToggleReveal();
+        }
     }
 }
