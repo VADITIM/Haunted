@@ -57,7 +57,6 @@ public class ItemHorn : MonoBehaviour, InventoryItem
         if (other.CompareTag("Player"))
         {
             transform.position = teleportPosition;
-            Debug.Log($"{Name} teleported to {teleportPosition}");
         }
     }
 }
