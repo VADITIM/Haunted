@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,61 +6,69 @@ public class Dialogue : MonoBehaviour
 {
     public TextMeshProUGUI textComponent;
     public string[] lines;
-    public float textSpeed; 
-
+    public float textSpeed;
     private int index;
 
-    // Start is called before the first frame update
     void Start()
     {
         textComponent.text = string.Empty;
-        StartDialogue();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (textComponent.text == lines[index])
+            if (lines.Length < 1)
+            {
+                Debug.LogError("No lines available in the dialogue.");
+                return;
+            }
+            if (textComponent.text == lines[index]) // Only move to next line if current one is fully shown
             {
                 NextLine();
             }
             else
-            { 
-                StopAllCoroutines();
+            {
+                StopAllCoroutines(); // Show the full line if it's incomplete
                 textComponent.text = lines[index];
             }
         }
     }
-    void StartDialogue() 
-    {
-        index = 0;
-        StartCoroutine(TypeLine()); 
-    }
 
-    IEnumerator TypeLine()
-    {
-        foreach (char c in lines[index].ToCharArray())
-        {
-            textComponent.text += c;
-            yield return new WaitForSeconds(textSpeed); 
-        }
-    
-    }
-
-    void NextLine()
+    public void NextLine()
     {
         if (index < lines.Length - 1)
         {
             index++;
             textComponent.text = string.Empty;
-            StartCoroutine(TypeLine());
+            StartCoroutine(TypeLine()); // Begin typing the next line
         }
         else
-        { 
-             gameObject.SetActive(false);
+        {
+            PlayerMotor.dialogue = false;
+            gameObject.SetActive(false); // Close dialogue box
         }
     }
 
+    public void StartDialogue()
+    {
+        if (lines.Length < 1)
+        {
+            Debug.LogError("No lines available in the dialogue.");
+            return;
+        }
+        index = 0;
+        PlayerMotor.dialogue = true;
+        StartCoroutine(TypeLine());
+    }
+
+    IEnumerator TypeLine()
+    {
+        textComponent.text = string.Empty;
+        foreach (char c in lines[index].ToCharArray())
+        {
+            textComponent.text += c;
+            yield return new WaitForSeconds(textSpeed);
+        }
+    }
 }
