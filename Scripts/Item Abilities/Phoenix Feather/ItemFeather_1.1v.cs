@@ -1,14 +1,18 @@
 using UnityEngine;
 
-public class ItemMoonlightWater : MonoBehaviour, InventoryItem 
+public class ItemFeather : MonoBehaviour, InventoryItem 
 {
-    public string Name => "Moonlight Water";
+    public string Name 
+    {
+        get { return "Item";}
+    }
 
-    [SerializeField]
-    private Sprite moonlightWaterSprite;
-    public Sprite Image => moonlightWaterSprite;
+    public Sprite _Image;
 
-    public PlayerChange playerChangeScript; // Reference to the PlayerChange script
+    public Sprite Image
+    { 
+        get { return _Image; }
+    }
 
     private float floatAmplitude = .1f;
     private float floatFrequency = 1f;
@@ -31,6 +35,9 @@ public class ItemMoonlightWater : MonoBehaviour, InventoryItem
         tempPosition.y += Mathf.Sin(Time.fixedTime * Mathf.PI * floatFrequency) * floatAmplitude;
         transform.position = tempPosition;
     }
+
+    public FeatherAbility FeatherAbilityScript; 
+
     public void OnPickUp()
     {
         gameObject.SetActive(false);
@@ -39,9 +46,9 @@ public class ItemMoonlightWater : MonoBehaviour, InventoryItem
 
     public void Use()
     {
-        if (playerChangeScript != null)
+        if (FeatherAbilityScript != null)
         {
-            playerChangeScript.Change();
+            FeatherAbilityScript.CreateDestroyArea();
         }
     }
 }

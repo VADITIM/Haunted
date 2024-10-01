@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public class ItemMoonlightWater : MonoBehaviour, InventoryItem 
+public class ItemGem : MonoBehaviour, InventoryItem 
 {
-    public string Name => "Moonlight Water";
+    public string Name => "Gem of Revealing";
 
     [SerializeField]
-    private Sprite moonlightWaterSprite;
-    public Sprite Image => moonlightWaterSprite;
+    private Sprite gemSprite;
+    public Sprite Image => gemSprite;
 
-    public PlayerChange playerChangeScript; // Reference to the PlayerChange script
+    public RevealAbility reveal; 
 
     private float floatAmplitude = .1f;
     private float floatFrequency = 1f;
@@ -31,6 +31,7 @@ public class ItemMoonlightWater : MonoBehaviour, InventoryItem
         tempPosition.y += Mathf.Sin(Time.fixedTime * Mathf.PI * floatFrequency) * floatAmplitude;
         transform.position = tempPosition;
     }
+
     public void OnPickUp()
     {
         gameObject.SetActive(false);
@@ -39,9 +40,18 @@ public class ItemMoonlightWater : MonoBehaviour, InventoryItem
 
     public void Use()
     {
-        if (playerChangeScript != null)
+        if (reveal != null)
         {
-            playerChangeScript.Change();
+            reveal.ToggleReveal();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        ItemMerger itemMerger = other.GetComponent<ItemMerger>();
+        if (itemMerger != null)
+        {
+            itemMerger.PlaceItem(gameObject);
         }
     }
 }

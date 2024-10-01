@@ -1,14 +1,15 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class ItemMoonlightWater : MonoBehaviour, InventoryItem 
+public class ItemFlower : MonoBehaviour, InventoryItem 
 {
-    public string Name => "Moonlight Water";
+    public string Name => "Elderflower Essence";
 
     [SerializeField]
-    private Sprite moonlightWaterSprite;
-    public Sprite Image => moonlightWaterSprite;
+    private Sprite featherSprite;
+    public Sprite Image => featherSprite;
 
-    public PlayerChange playerChangeScript; // Reference to the PlayerChange script
+    public FlowerAbility flowerAbilityScript; 
 
     private float floatAmplitude = .1f;
     private float floatFrequency = 1f;
@@ -31,6 +32,7 @@ public class ItemMoonlightWater : MonoBehaviour, InventoryItem
         tempPosition.y += Mathf.Sin(Time.fixedTime * Mathf.PI * floatFrequency) * floatAmplitude;
         transform.position = tempPosition;
     }
+
     public void OnPickUp()
     {
         gameObject.SetActive(false);
@@ -39,9 +41,9 @@ public class ItemMoonlightWater : MonoBehaviour, InventoryItem
 
     public void Use()
     {
-        if (playerChangeScript != null)
+        if (flowerAbilityScript != null)
         {
-            playerChangeScript.Change();
+            flowerAbilityScript.SpawnAndScaleObject();
         }
     }
 }
