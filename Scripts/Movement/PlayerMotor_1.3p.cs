@@ -114,4 +114,5 @@ public class PlayerMotor : MonoBehaviour
             Debug.Log($"{item.Name} added");
             inventory.AddItem(item);
         }
-    }}
+    }
+}
