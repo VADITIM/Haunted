@@ -45,7 +45,6 @@ public class Inventory : MonoBehaviour
         return maxItems.Count;
     }
 
-    // Remove the item from the inventory list
     public void RemoveItem(int slotIndex)
     {
         if (slotIndex >= 0 && slotIndex < maxItems.Count)

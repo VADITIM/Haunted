@@ -14,7 +14,6 @@ public class InventoryEventArguments : EventArgs
     public InventoryEventArguments(InventoryItem item)
     {
         Item = item;
-
     }
     public InventoryItem Item;
 }
