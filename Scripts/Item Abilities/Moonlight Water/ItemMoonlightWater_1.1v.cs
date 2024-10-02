@@ -10,6 +10,27 @@ public class ItemMoonlightWater : MonoBehaviour, InventoryItem
 
     public PlayerChange playerChangeScript; // Reference to the PlayerChange script
 
+    private float floatAmplitude = .1f;
+    private float floatFrequency = 1f;
+
+    private Vector3 startPosition;
+
+    void Start()
+     {
+        startPosition = transform.position;
+     }
+
+     void Update()
+     {
+        Float();
+     }
+
+    private void Float()
+    {
+        Vector3 tempPosition = startPosition;
+        tempPosition.y += Mathf.Sin(Time.fixedTime * Mathf.PI * floatFrequency) * floatAmplitude;
+        transform.position = tempPosition;
+    }
     public void OnPickUp()
     {
         gameObject.SetActive(false);
@@ -18,23 +39,9 @@ public class ItemMoonlightWater : MonoBehaviour, InventoryItem
 
     public void Use()
     {
-        // Code to use the item
-        Debug.Log($"{Name} used");
-
-        // Trigger the PlayerChange functionality if the script is assigned
         if (playerChangeScript != null)
         {
             playerChangeScript.Change();
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        // Check if the other object is the ItemMerger
-        ItemMerger itemMerger = other.GetComponent<ItemMerger>();
-        if (itemMerger != null)
-        {
-            itemMerger.PlaceItem(gameObject);
         }
     }
 }
