@@ -1,4 +1,3 @@
-using System.Text;
 using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
@@ -11,9 +10,9 @@ public class PlayerMotor : MonoBehaviour
     private bool lerpCrouch = false;
 
     private bool sprinting = false;
-    public int sprintSpeed = 20;
+    public int sprintSpeed = 5;
 
-    public float speed = 5f;
+    public float speed = 2f;
 
     public float gravity = -9.8f;
     public float jumpHeight = 3f;
@@ -22,7 +21,6 @@ public class PlayerMotor : MonoBehaviour
     
     static public bool dialogue = false;
     
-    // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();  
@@ -31,7 +29,6 @@ public class PlayerMotor : MonoBehaviour
         controller.height = 2;
     }
 
-    // Update is called once per frame
     void Update()
     {
         isGrounded = controller.isGrounded;
@@ -73,6 +70,7 @@ public class PlayerMotor : MonoBehaviour
         controller.Move(playerVelocity * Time.deltaTime);
 
 
+
     }
     public void Jump()
     {
@@ -80,22 +78,28 @@ public class PlayerMotor : MonoBehaviour
         { 
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2.8f * gravity);
         }
-        
     }
+
     public void Crouch()
     {
         crouching = !crouching;
         crouchTimer = 0;
         lerpCrouch = true; 
     }
-    
+
     public void Sprint()
     {
         sprinting = !sprinting;
         if (sprinting)
             speed = sprintSpeed; 
         else
-            speed = 5f ;
+            speed = 2f;
+    }
+
+    public void StopSprinting()
+    {
+        sprinting = false;
+        speed = 2f;
     }
 
     // INVENTORY
@@ -111,5 +115,4 @@ public class PlayerMotor : MonoBehaviour
             inventory.AddItem(item);
         }
     }
-
 }
