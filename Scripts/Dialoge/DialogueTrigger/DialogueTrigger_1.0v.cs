@@ -13,7 +13,7 @@ public class DialogueTrigger : MonoBehaviour
     private int currentLine = 0;
     private bool playerInRange = false;
     private bool hasTriggered = false; 
-    private float nextSkipTime = 1f; 
+    private float nextSkipTime = .5f; 
 
 
     void Start()
