@@ -12,29 +12,58 @@ public class PickThrow : MonoBehaviour
     private Rigidbody heldObjectRB;
     private Vector3 originalScale;
 
+
+    public bool pickedUp = false;
     public bool canPickUp = true;
     public bool canDrop = true;
+
+
     private int LayerNumber;
 
 
     public bool disableActions = false;
     public bool disableDebugRay = false;
 
+    public  Camera cam;
+    public LayerMask mask;
+    public GameObject pickUpUI;
+    public GameObject dropText;
+    public GameObject throwText;
+
+
     public HUD hud; 
 
     void Start()
     {
         LayerNumber = LayerMask.NameToLayer("holdLayer");
+        pickUpUI.SetActive(false);
+        dropText.SetActive(false);
+        throwText.SetActive(false);
     }
-
 
     void Update()
     {
         if (disableActions) return;
 
         HandleActions();
+        CheckForInteractable();
     }
 
+
+    private void CheckForInteractable()
+    {
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        RaycastHit hitInfo;
+        if (Physics.Raycast(ray, out hitInfo, pickUpRange, mask))
+        {
+            if (hitInfo.collider.CompareTag("canPickUp") && !pickedUp)
+            {
+                pickUpUI.SetActive(true);
+                return;
+            }
+        }
+        pickUpUI.SetActive(false); // Disable the text object if no relevant object is hit
+    }
 
     void HandleActions() 
     {
@@ -96,6 +125,9 @@ public class PickThrow : MonoBehaviour
 
             Physics.IgnoreCollision(holdingObject.GetComponent<Collider>(), Player.GetComponent<Collider>(), true);
         }
+        dropText.SetActive(true);
+        throwText.SetActive(true);
+        pickedUp = true;
     }
 
     void Throw()
@@ -106,6 +138,10 @@ public class PickThrow : MonoBehaviour
         heldObjectRB.AddForce(transform.forward * throwForce);
 
         holdingObject = null;
+
+        dropText.SetActive(false);
+        throwText.SetActive(false);
+        pickedUp = false;
     }
     
 
@@ -116,12 +152,16 @@ public class PickThrow : MonoBehaviour
         heldObjectRB.isKinematic = false; 
         
         holdingObject = null;
+        
+        dropText.SetActive(false);
+        throwText.SetActive(false);
+        pickedUp = false;
     }
 
     void MoveToObjectPosition() 
     {
         holdingObject.transform.position = holdPosition.position;
-        holdingObject.transform.rotation = holdPosition.rotation;
+        // holdingObject.transform.rotation = holdPosition.rotation;
 
         holdingObject.transform.localScale = originalScale;
     }
