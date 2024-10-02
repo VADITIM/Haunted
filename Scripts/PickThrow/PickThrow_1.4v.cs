@@ -8,68 +8,68 @@ public class PickThrow : MonoBehaviour
     public float throwForce = 500f;
     public float pickUpRange = 3f;
     
-    public GameObject holdingObject;
+    private GameObject holdingObject;
     private Rigidbody heldObjectRB;
     private Vector3 originalScale;
 
+
+    public bool pickedUp = false;
     public bool canPickUp = true;
     public bool canDrop = true;
-    private int LayerNumber; // Layer Index
+
+
+    private int LayerNumber;
 
 
     public bool disableActions = false;
     public bool disableDebugRay = false;
+
+    public  Camera cam;
+    public LayerMask mask;
+    public GameObject pickUpUI;
+    public GameObject dropText;
+    public GameObject throwText;
+
 
     public HUD hud; 
 
     void Start()
     {
         LayerNumber = LayerMask.NameToLayer("holdLayer");
+        pickUpUI.SetActive(false);
+        dropText.SetActive(false);
+        throwText.SetActive(false);
     }
-
 
     void Update()
     {
         if (disableActions) return;
 
-        if (hud == null)
-        {
-            Debug.LogError("HUD reference is missing in PickThrow script!");
-            return;  
-        }
-
         HandleActions();
-        // DebugRay();
+        CheckForInteractable();
     }
 
-    void DebugRay() 
-    {
-        Vector3 direction = transform.TransformDirection(Vector3.forward);
-        RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, direction, out hit, pickUpRange)) 
+    private void CheckForInteractable()
+    {
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        RaycastHit hitInfo;
+        if (Physics.Raycast(ray, out hitInfo, pickUpRange, mask))
         {
-            if (hit.transform.gameObject.CompareTag("canPickUp"))
+            if (hitInfo.collider.CompareTag("canPickUp") && !pickedUp)
             {
-                Debug.DrawRay(transform.position, direction * pickUpRange, Color.green);
+                pickUpUI.SetActive(true);
+                return;
             }
-            else 
-            {
-                Debug.DrawRay(transform.position, direction * pickUpRange, Color.red);
-            }
-        }    
-        else 
-        {
-            Debug.DrawRay(transform.position, direction * pickUpRange, Color.red);
         }
+        pickUpUI.SetActive(false); // Disable the text object if no relevant object is hit
     }
 
     void HandleActions() 
     {
-        // Ensure hud is assigned before proceeding
         if (hud == null)
         {
-            return;  // Stop further execution if HUD is null
+            return;  
         }
 
         if (Input.GetKeyDown(KeyCode.R)) 
@@ -79,7 +79,6 @@ public class PickThrow : MonoBehaviour
                 // Check if a slot is selected in the HUD
                 if (!hud.IsSlotSelected()) // Prevent pickup if a slot is selected
                 {
-                    // Raycast to check if player is looking at obj
                     RaycastHit hit;
                     Vector3 direction = transform.TransformDirection(Vector3.forward);
 
@@ -119,45 +118,51 @@ public class PickThrow : MonoBehaviour
         {
             holdingObject = pickUpObject;
             heldObjectRB = rb;
-            originalScale = holdingObject.transform.localScale;    // copy the scale of the object
+            originalScale = holdingObject.transform.localScale;    
             heldObjectRB.isKinematic = true;
             
-            holdingObject.layer = LayerNumber;     // change object layer to holdLayer in Unity
+            holdingObject.layer = LayerNumber;     
 
-            // stop collision with player while held
             Physics.IgnoreCollision(holdingObject.GetComponent<Collider>(), Player.GetComponent<Collider>(), true);
         }
+        dropText.SetActive(true);
+        throwText.SetActive(true);
+        pickedUp = true;
     }
 
     void Throw()
     {
-        // activate collision with player after throw
         Physics.IgnoreCollision(holdingObject.GetComponent<Collider>(), Player.GetComponent<Collider>(), false);
         holdingObject.layer = 0;
         heldObjectRB.isKinematic = false;
         heldObjectRB.AddForce(transform.forward * throwForce);
 
         holdingObject = null;
+
+        dropText.SetActive(false);
+        throwText.SetActive(false);
+        pickedUp = false;
     }
     
 
     public void Drop() 
     {
-        // activate collision with player after drop
         Physics.IgnoreCollision(holdingObject.GetComponent<Collider>(), Player.GetComponent<Collider>(), false);
         holdingObject.layer = 0;
         heldObjectRB.isKinematic = false; 
         
         holdingObject = null;
+        
+        dropText.SetActive(false);
+        throwText.SetActive(false);
+        pickedUp = false;
     }
 
     void MoveToObjectPosition() 
     {
-        // adjust the position of the object to holdPosition
         holdingObject.transform.position = holdPosition.position;
-        holdingObject.transform.rotation = holdPosition.rotation;
+        // holdingObject.transform.rotation = holdPosition.rotation;
 
-        // reset the scale to original scale
         holdingObject.transform.localScale = originalScale;
     }
 
@@ -165,12 +170,10 @@ public class PickThrow : MonoBehaviour
     {
         var clipRange = Vector3.Distance(holdingObject.transform.position, transform.position);
         
-        // check for how many objects are within the Raycast
         RaycastHit[] hits;
         hits = Physics.RaycastAll(transform.position, transform.TransformDirection(Vector3.forward), clipRange);
         if (hits.Length > 1)
         {
-            // change position to camera position
             holdingObject.transform.position = transform.position + new Vector3(0f, -0.5f, 0f);
         }
     }
