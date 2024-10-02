@@ -8,14 +8,20 @@ public class HornAbility : MonoBehaviour
     public GameObject objectToSpawn; 
     public GameObject dialogueCollider; 
     private int litTorchCount = 0;
-    private int requiredLitTorches = 10;
+    private int requiredLitTorches = 5;
 
     private bool isLightOn = false;
+
+    public AudioClip toggleSound; // Sound to play when the chest is toggled
+
+    private AudioSource audioSource; // AudioSource component
+
 
     void Start()
     {
         objectToSpawn.SetActive(false);
         dialogueCollider.SetActive(false);
+        audioSource = GetComponent<AudioSource>(); // Get the AudioSource component
     }
 
     public void TorchLit()
@@ -25,6 +31,10 @@ public class HornAbility : MonoBehaviour
         {
             objectToSpawn.SetActive(true);
             dialogueCollider.SetActive(true);
+            if (requiredLitTorches == 5)
+            {
+                audioSource.PlayOneShot(toggleSound);
+            }
         }
     }
     
@@ -46,11 +56,6 @@ public class HornAbility : MonoBehaviour
                 {
                     TorchLit();
                     return;
-                }
-
-                if (hit.collider.CompareTag("torch") && !isLightOn)
-                {
-                    TorchLit();
                 }
             }
             externalLight.enabled = !isLightOn;
@@ -75,6 +80,7 @@ public class HornAbility : MonoBehaviour
                     pointLight.type = LightType.Point;
                     pointLight.range = 10.0f; 
                     pointLight.intensity = 1.0f; 
+                    pointLight.color = Color.yellow;
                 }
             }
         }
